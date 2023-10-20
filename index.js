@@ -31,7 +31,16 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/products/:id", async (req, res) => {
+    app.get("/products/:brand", async (req, res) => {
+      const brand = req.params.brand;
+      console.log(brand);
+      const query = { brand: brand };
+      const result = await products.find(query).toArray();
+      res.send(result);
+    });
+
+    app.get("/products1/:id", async (req, res) => {
+      //   const brand = req.params.brand;
       const id = req.params.id;
       console.log(id);
       const query = { _id: new ObjectId(id) };
@@ -39,10 +48,24 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/products/:brand", async (req, res) => {
-      const brand = req.params.brand;
-      const query = { brand: brand };
-      const result = await products.find(query).toArray();
+    app.put("/products1/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateProduct = req.body;
+      const product = {
+        $set: {
+          name: updateProduct.name,
+          brand: updateProduct.brand,
+          type: updateProduct.type,
+          price: updateProduct.price,
+          description: updateProduct.description,
+          rating: updateProduct.rating,
+          photo: updateProduct.photo,
+        },
+      };
+
+      const result = await products.updateOne(filter, product, options);
       res.send(result);
     });
 
