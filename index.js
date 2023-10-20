@@ -40,9 +40,7 @@ async function run() {
     });
 
     app.get("/products1/:id", async (req, res) => {
-      //   const brand = req.params.brand;
       const id = req.params.id;
-      console.log(id);
       const query = { _id: new ObjectId(id) };
       const result = await products.findOne(query);
       res.send(result);
@@ -76,10 +74,39 @@ async function run() {
     });
 
     // cart
+    app.get("/cart", async (req, res) => {
+      const cursor = cart.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     app.get("/cart/:username", async (req, res) => {
       const username = req.params.username;
       const query = { username: username };
       const result = await cart.find(query).toArray();
+      res.send(result);
+    });
+
+    app.get("/carts/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cart.findOne(query);
+      res.send(result);
+    });
+
+    app.get("/carts/:username/:id", async (req, res) => {
+      const username = req.params.username;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id), username: username };
+      const result = await cart.find(query).toArray();
+      res.send(result);
+    });
+
+    app.delete("/carts/:username/:id", async (req, res) => {
+      const username = req.params.username;
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id), username: username };
+      const result = await cart.deleteOne(query);
       res.send(result);
     });
 
